@@ -3,7 +3,6 @@ import "./../styles/App.css";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
-import DialogTitle from "@material-ui/core/DialogTitle";
 import { ListItemText } from "@material-ui/core";
 function ToDoList(props) {
   const [open, setOpen] = React.useState(false);
@@ -38,7 +37,6 @@ function ToDoList(props) {
         onClose={handleClose}
         aria-labelledby="form-dialog-title"
       >
-        <DialogTitle id="form-dialog-title">Edit Task </DialogTitle>
         <DialogContent>
           <textarea
             className="editTask"
@@ -64,7 +62,7 @@ function ToDoList(props) {
 }
 function ToDo(props) {
   return (
-    <div className="App">
+    <div>
       {props.tasks.map((todo, index) => (
         <ToDoList
           className="list"
@@ -81,7 +79,7 @@ function ToDo(props) {
 function SubmitForm(props) {
   const [currTask, setCurrTask] = React.useState("");
   return (
-    <div className="App ">
+    <div>
       <textarea
         id="task"
         value={currTask}
@@ -109,7 +107,6 @@ function App() {
   const handleDelete = (index) => {
     const arrCopy = [...task];
     arrCopy.splice(index, 1);
-    //console.log(arrCopy);
     setTask(arrCopy);
   };
   const handleSubmit = (currTask) => {
