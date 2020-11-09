@@ -4,6 +4,8 @@ import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import { ListItemText } from "@material-ui/core";
+
+// every List item code
 function ToDoList(props) {
   const [open, setOpen] = React.useState(false);
   const [currTask, setCurrTask] = React.useState(props.content);
@@ -32,6 +34,8 @@ function ToDoList(props) {
       <button className="edit" onClick={handleClickOpen}>
         Edit
       </button>
+
+      {/*dialog box code*/}
       <Dialog
         open={open}
         onClose={handleClose}
@@ -60,6 +64,8 @@ function ToDoList(props) {
     </div>
   );
 }
+
+// the list code
 function ToDo(props) {
   return (
     <div>
@@ -76,6 +82,8 @@ function ToDo(props) {
     </div>
   );
 }
+
+// code for adding new items through Add button and textarea
 function SubmitForm(props) {
   const [currTask, setCurrTask] = React.useState("");
   return (
@@ -100,6 +108,7 @@ function SubmitForm(props) {
     </div>
   );
 }
+// main App which is gonna render
 function App() {
   const tasks = [];
   const [task, setTask] = React.useState(tasks);
