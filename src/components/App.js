@@ -6,7 +6,7 @@ import DialogContent from "@material-ui/core/DialogContent";
 import { ListItemText } from "@material-ui/core";
 
 // every List item code
-function ToDoList(props) {
+function List(props) {
   const [open, setOpen] = React.useState(false);
   const [currTask, setCurrTask] = React.useState(props.content);
 
@@ -70,7 +70,7 @@ function ToDo(props) {
   return (
     <div>
       {props.tasks.map((todo, index) => (
-        <ToDoList
+        <List
           className="list"
           content={todo}
           key={index}
