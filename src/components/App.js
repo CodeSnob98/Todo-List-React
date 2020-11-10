@@ -24,7 +24,7 @@ function ToDoList(props) {
     setOpen(false);
   };
   return (
-    <div>
+    <div className="list">
       <ListItemText primary={props.content} />
 
       <button className="delete" onClick={() => props.onDelete(props.id)}>
@@ -68,7 +68,7 @@ function ToDoList(props) {
 // the list code
 function ToDo(props) {
   return (
-    <div className="list">
+    <div>
       {props.tasks.map((todo, index) => (
         <ToDoList
           content={todo}
