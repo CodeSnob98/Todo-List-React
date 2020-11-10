@@ -1,142 +1,100 @@
+import { useState } from "react";
 import React from "react";
-import "./../styles/App.css";
-import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import { ListItemText } from "@material-ui/core";
 
-// every List item code
-function ToDoList(props) {
-  const [open, setOpen] = React.useState(false);
-  const [currTask, setCurrTask] = React.useState(props.content);
+export default function App() {
+  const [inputBox, setInputBox] = useState("");
+  const [editBoxText, setEditBoxText] = useState("");
+  const [toDoList, setToDoList] = useState([]);
+  const [taskId, setTaskId] = useState(0);
+  const [showEditBox, setShowEditBox] = useState(false);
+  const [editId, setEditId] = useState(1);
 
-  const handleClickOpen = () => {
-    setOpen(true);
+  const handleInputBoxChange = (event) => {
+    let text = event.target.value;
+    setInputBox(text);
   };
-  const handleSave = (event) => {
-    event.preventDefault();
-    if (currTask !== "") {
-      props.onSave(currTask, props.id);
-      setCurrTask("");
-    }
+
+  const handleAddTask = () => {
+    let tempList = [...toDoList];
+    tempList.push({ id: taskId, text: inputBox });
+    setTaskId(taskId + 1);
+    setToDoList(tempList);
+    setInputBox("");
   };
-  const handleClose = () => {
-    setOpen(false);
+
+  const handleDelete = (id) => {
+    let newToDoList = toDoList.filter((task) => task !== toDoList[id]);
+    setToDoList(newToDoList);
   };
+
+  const handleEdit = (id) => {
+    setShowEditBox(!showEditBox);
+    setEditId(id);
+  };
+
+  const handleEditBox = (event) => {
+    let text = event.target.value;
+    setEditBoxText(text);
+  };
+
+  const saveEdit = () => {
+    const tempList = [...toDoList];
+    tempList.forEach((task) => {
+      if (task.id === editId) {
+        task.text = editBoxText;
+      }
+    });
+    setToDoList(tempList);
+    setShowEditBox(false);
+    setEditBoxText("");
+  };
+
   return (
-    <div className="list">
-      <ListItemText primary={props.content} />
-
-      <button className="delete" onClick={() => props.onDelete(props.id)}>
-        Delete
-      </button>
-
-      <button className="edit" onClick={handleClickOpen}>
-        Edit
-      </button>
-
-      {/*dialog box code*/}
-      <Dialog
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="form-dialog-title"
-      >
-        <DialogContent>
-          <textarea
-            className="editTask"
-            id={props.id}
-            value={currTask}
-            onChange={(event) => setCurrTask(event.target.value)}
-          />
-        </DialogContent>
-        <DialogActions>
-          <button
-            className="saveTask"
-            onClick={(event) => {
-              handleSave(event);
-              handleClose();
-            }}
-          >
-            Save
-          </button>
-        </DialogActions>
-      </Dialog>
-    </div>
+    <>
+      <div id="main">
+        <textarea id="task" value={inputBox} onChange={handleInputBoxChange} />
+        <button id="btn" disabled={!inputBox} onClick={handleAddTask}>
+          Add Task
+        </button>
+        <hr />
+        {toDoList.length === 0 ? (
+          <div>No Tasks</div>
+        ) : (
+          <ul>
+            {toDoList.map((task, id) => {
+              return (
+                <>
+                  <li key={id} className="list">
+                    {task.text}
+                  </li>
+                  <button className="edit" onClick={() => handleEdit(id)}>
+                    Edit
+                  </button>
+                  <button className="delete" onClick={() => handleDelete(id)}>
+                    Delete
+                  </button>
+                </>
+              );
+            })}
+          </ul>
+        )}
+        {showEditBox ? (
+          <div>
+            <textarea
+              className="editTask"
+              value={editBoxText}
+              onChange={handleEditBox}
+            />
+            <button
+              className="saveTask"
+              disabled={!editBoxText}
+              onClick={() => saveEdit()}
+            >
+              Save
+            </button>
+          </div>
+        ) : null}
+      </div>
+    </>
   );
 }
-
-// the list code
-function ToDo(props) {
-  return (
-    <div>
-      {props.tasks.map((todo, index) => (
-        <ToDoList
-          content={todo}
-          key={index}
-          id={index}
-          onDelete={props.onDelete}
-          onSave={props.onSave}
-        />
-      ))}
-    </div>
-  );
-}
-
-// code for adding new items through Add button and textarea
-function SubmitForm(props) {
-  const [currTask, setCurrTask] = React.useState("");
-  return (
-    <div>
-      <textarea
-        id="task"
-        value={currTask}
-        onChange={(event) => setCurrTask(event.target.value)}
-      />
-      <button
-        id="btn"
-        onClick={(event) => {
-          event.preventDefault();
-          if (currTask !== "") {
-            props.onSave(currTask);
-            setCurrTask("");
-          }
-        }}
-      >
-        Add
-      </button>
-    </div>
-  );
-}
-// main App which is gonna render
-function App() {
-  const tasks = [];
-  const [task, setTask] = React.useState(tasks);
-
-  const handleDelete = (index) => {
-    const arrCopy = [...task];
-    arrCopy.splice(index, 1);
-    setTask(arrCopy);
-  };
-  const handleSubmit = (currTask) => {
-    if (currTask !== "") {
-      const arrCopy = [...task];
-      arrCopy.push(currTask);
-      console.log(currTask);
-      setTask(arrCopy);
-    }
-  };
-  const handleSave = (currTask, index) => {
-    let arrCopy = [...task];
-    arrCopy.splice(index, 1, currTask);
-    setTask(arrCopy);
-  };
-  return (
-    <div id="main">
-      <SubmitForm onSave={handleSubmit} />
-      <hr />
-      <ToDo tasks={task} onDelete={handleDelete} onSave={handleSave} />
-    </div>
-  );
-}
-
-export default App;
